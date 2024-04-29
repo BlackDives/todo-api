@@ -7,7 +7,7 @@ using todo_rest_api.Services;
 
 namespace todo_rest_api.Controllers
 {
-    [Route("api/user")]
+    [Route("api/tasks")]
     [ApiController]
     public class UserTaskController : ControllerBase
     {

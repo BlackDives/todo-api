@@ -2,6 +2,8 @@ using todo_rest_api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using todo_rest_api.Interfaces;
+using todo_rest_api.Repository;
 
 namespace todo_rest_api
 {
@@ -18,6 +20,8 @@ namespace todo_rest_api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             // Configure Entity Framework Core with MySQL
             builder.Services.AddDbContext<TodoDbContext>(options => options.UseMySql(configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 36))));
