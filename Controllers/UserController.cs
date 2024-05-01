@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using todo_rest_api.Interfaces;
 using todo_rest_api.Models;
+using todo_rest_api.Repository;
 
 namespace todo_rest_api.Controllers
 {
@@ -17,7 +18,7 @@ namespace todo_rest_api.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
-            public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
             var users = _userRepostitory.GetUsers();
 
@@ -25,6 +26,37 @@ namespace todo_rest_api.Controllers
                 return BadRequest(ModelState);
 
             return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetUser([FromRoute] int id)
+        {
+            var user = _userRepostitory.GetUserById(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(user);
+        }
+
+        [HttpGet("{id}/tasks")]
+        public IActionResult GetUserTasks([FromRoute] int id) 
+        { 
+            var tasks = _userRepostitory.GetUserTasks(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(tasks);
+        }
+
+        [HttpGet("{id}/tasks/{taskId}")]
+        public IActionResult GetTask([FromRoute] int id, [FromRoute] int taskId)
+        {
+            var tasks = _userRepostitory.GetUserTask(id, taskId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(tasks);
         }
     }
 }

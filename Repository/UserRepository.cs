@@ -12,9 +12,24 @@ namespace todo_rest_api.Repository
             _context = context; 
         }
 
+        public User GetUserById(int id)
+        {
+           return _context.Users.Find(id);
+        }
+
         public ICollection<User> GetUsers()
         {
-            return _context.Users.OrderBy(p => p.Id).ToList();
+            return _context.Users.OrderBy(x => x.Id).ToList();
+        }
+
+        public UserTask GetUserTask(int id, int taskId)
+        {
+            return _context.UserTasks.SingleOrDefault(x => x.UserId == id && x.Id == taskId);
+        }
+
+        public ICollection<UserTask> GetUserTasks(int userId)
+        {
+            return _context.UserTasks.Where(x => x.UserId == userId).ToList();
         }
     }
 }
