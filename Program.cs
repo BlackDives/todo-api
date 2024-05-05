@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using todo_rest_api.Interfaces;
 using todo_rest_api.Repository;
+using todo_rest_api.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace todo_rest_api
 {
@@ -25,6 +27,14 @@ namespace todo_rest_api
 
             // Configure Entity Framework Core with MySQL
             builder.Services.AddDbContext<TodoDbContext>(options => options.UseMySql(configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 36))));
+            builder.Services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+            }).AddEntityFrameworkStores<TodoDbContext>();
 
             var app = builder.Build();
 

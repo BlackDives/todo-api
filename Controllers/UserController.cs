@@ -58,5 +58,19 @@ namespace todo_rest_api.Controllers
                 return BadRequest(ModelState);
             return Ok(tasks);
         }
+
+        [HttpPost]
+        public IActionResult PostUser([FromBody] User user)
+        {
+            _userRepostitory.CreateUser(user);
+            return CreatedAtAction(nameof(PostUser), new {id = user.Id}, user);
+        }
+
+        [HttpPost("{id}/tasks")]
+        public IActionResult PostUserTask([FromBody] UserTask userTask)
+        {
+            _userRepostitory.CreateUserTask(userTask);
+            return CreatedAtAction(nameof(PostUserTask), new {id = userTask.Id}, userTask);
+        }
     }
 }

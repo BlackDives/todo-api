@@ -11,5 +11,13 @@ namespace todo_rest_api.Interfaces
         User GetUserById(int id);
 
         UserTask GetUserTask(int userId, int taskId);
+
+        User CreateUser(User user);
+
+        UserTask CreateUserTask(UserTask userTask);
+
+        User UpdateUser(User user);
+
+        UserTask UpdateTask(UserTask task);
     }
 }

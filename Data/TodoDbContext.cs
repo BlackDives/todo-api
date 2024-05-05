@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using todo_rest_api.Models;
 
 namespace todo_rest_api.Data
 {
-    public class TodoDbContext : DbContext
+    public class TodoDbContext : IdentityDbContext<User>
     {
         public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options)
         {
