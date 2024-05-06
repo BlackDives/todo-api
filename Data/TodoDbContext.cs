@@ -1,14 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using todo_rest_api.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace todo_rest_api.Data
 {
-    public class TodoDbContext : IdentityDbContext<User>
+    public class TodoDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
         }
 
         public DbSet<UserTask> UserTasks { get; set; }
@@ -17,3 +23,4 @@ namespace todo_rest_api.Data
 
     }
 }
+   

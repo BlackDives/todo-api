@@ -6,6 +6,8 @@ using todo_rest_api.Interfaces;
 using todo_rest_api.Repository;
 using todo_rest_api.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace todo_rest_api
 {
@@ -27,7 +29,7 @@ namespace todo_rest_api
 
             // Configure Entity Framework Core with MySQL
             builder.Services.AddDbContext<TodoDbContext>(options => options.UseMySql(configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 36))));
-            builder.Services.AddIdentity<User, IdentityRole>(options =>
+            builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -36,7 +38,29 @@ namespace todo_rest_api
                 options.Password.RequiredLength = 8;
             }).AddEntityFrameworkStores<TodoDbContext>();
 
-            var app = builder.Build();
+            builder.Services.AddAuthentication(options => {
+               options.DefaultAuthenticateScheme = 
+               options.DefaultChallengeScheme = 
+               options.DefaultForbidScheme = 
+               options.DefaultScheme =  
+               options.DefaultSignInScheme = 
+               options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["JWT:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+                        )
+                };
+            });
+
+            var app = builder.Build();  
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -47,6 +71,7 @@ namespace todo_rest_api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
