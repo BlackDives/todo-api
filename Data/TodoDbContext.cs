@@ -16,20 +16,22 @@ namespace todo_rest_api.Data
         {
             base.OnModelCreating(builder);
 
-            List<IdentityRole> roles = new List<IdentityRole>
+            List<IdentityRole<int>> roles = new List<IdentityRole<int>>
             {
-                new IdentityRole
+                new IdentityRole<int>
                 {
-                       Name = "Admin",
-                NormalizedName = "ADMIN"
+                  Id = 1,
+                  Name = "Admin",
+                  NormalizedName = "ADMIN"
                 },
-                 new IdentityRole
+                 new IdentityRole<int>
                 {
-                       Name = "User",
-                NormalizedName = "USER"
+                  Id = 2,
+                  Name = "User",
+                  NormalizedName = "USER"
                 },
             };
-            builder.Entity<IdentityRole>().HasData(roles);
+            builder.Entity<IdentityRole<int>>().HasData(roles);
         }
 
         public DbSet<UserTask> UserTasks { get; set; }

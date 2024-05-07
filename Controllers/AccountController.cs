@@ -33,6 +33,13 @@ namespace todo_rest_api.Controllers
                 {
                     UserName = registerDto.Username,
                     Email = registerDto.EmailAddress,
+                    FirstName = registerDto.FirstName,
+                    LastName = registerDto.LastName,
+                    Password = registerDto.Password,
+                    PhoneNumber = registerDto.PhoneNumber,
+                    ProfilePictureUrl = registerDto.ProfilePictureUrl,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
                 };
 
                 var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
