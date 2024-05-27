@@ -13,10 +13,11 @@ namespace todo_rest_api.Models
     {
         [Key]
         [Column("task_id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [ForeignKey("User")]
         [Column("user_id")]
         public int UserId { get; set; }
+        [ForeignKey("UserId")]
         public User User { get; set; }
         [Column("task_name")]  
         public string Name { get; set; }

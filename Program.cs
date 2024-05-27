@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using todo_rest_api.Service;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace todo_rest_api
 {
@@ -21,9 +22,26 @@ namespace todo_rest_api
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
 
+            var myAllowedSpecificOrigins = "MyPolicy";
+            var mySpecificOrigin = "http://localhost:5173";
+
+
             // Add services to the container.
 
-            builder.Services.AddControllers().AddNewtonsoftJson();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: myAllowedSpecificOrigins, policy =>
+                {
+                    policy.WithOrigins(mySpecificOrigin)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -56,6 +74,7 @@ namespace todo_rest_api
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserTaskRepository, UserTaskRepository>();
             builder.Services.AddScoped<ITokenService, TokenService>();
 
             // Configure Entity Framework Core with MySQL
@@ -104,6 +123,7 @@ namespace todo_rest_api
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCors(myAllowedSpecificOrigins);
 
 
             app.MapControllers();

@@ -32,6 +32,8 @@ namespace todo_rest_api.Data
                 },
             };
             builder.Entity<IdentityRole<int>>().HasData(roles);
+
+            builder.Entity<UserTask>().Property(x => x.Id).ValueGeneratedOnAdd();
         }
 
         public DbSet<UserTask> UserTasks { get; set; }
